@@ -1,0 +1,6 @@
+DELETE http://localhost:3001/api/persons/1
+
+// Response
+{
+  "message": "Person deleted successfully"
+}
