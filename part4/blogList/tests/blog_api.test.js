@@ -26,7 +26,7 @@ test("blogs are returned as json", async () => {
     .expect("Content-Type", /application\/json/);
 });
 
-test.only("unique identifier is called 'id'", async () => {
+test("unique identifier is called 'id'", async () => {
   await api
     .get("/api/blogs")
     .expect(200)
@@ -40,6 +40,22 @@ test.only("unique identifier is called 'id'", async () => {
         }
       });
     });
+});
+
+test.only("its possible to create a new blog entry", async () => {
+
+  let blog = {
+    title: "React patternones",
+    author: "Michael Chaqui Chan",
+    url: "https://partrons.com/",
+    likes: 14,
+  }
+
+  await api
+  .post("/api/blogs")
+  .send(blog) 
+  .expect(201) 
+  .expect("Content-Type", /application\/json/)
 });
 
 
