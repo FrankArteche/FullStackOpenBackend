@@ -10,13 +10,8 @@ const api = supertest(app);
 const Blog = require("../models/blog");
 
 beforeEach(async () => {
-  await Blog.deleteMany({});
-
-  let blogObject = new Blog(helper.initialBlogs[0]);
-  await blogObject.save();
-
-  blogObject = new Blog(helper.initialBlogs[1]);
-  await blogObject.save();
+  await Blog.deleteMany({}); 
+  await Blog.insertMany(helper.initialBlogs); 
 });
 
 test("blogs are returned as json", async () => {
@@ -42,7 +37,7 @@ test("unique identifier is called 'id'", async () => {
     });
 });
 
-test.only("its possible to create a new blog entry", async () => {
+test("its possible to create a new blog entry", async () => {
 
   let blog = {
     title: "React patternones",
@@ -50,12 +45,40 @@ test.only("its possible to create a new blog entry", async () => {
     url: "https://partrons.com/",
     likes: 14,
   }
+  const blogsAtStart = await helper.blogsInDb();
+
 
   await api
   .post("/api/blogs")
   .send(blog) 
   .expect(201) 
   .expect("Content-Type", /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  
+
+  assert.strictEqual(blogsAtEnd.length, blogsAtStart.length + 1)
+
+  const contents = blogsAtEnd.map(n => n.title)
+  assert(contents.includes('React patternones'))
+
+});
+
+test.only("when likes are missing, default to 0", async () => {
+
+  let blog = {
+    title: "PASTRAMI",
+    author: "Chaquichieras Chancho",
+    url: "https://patreon.com/",
+  }
+
+  let response = await api
+  .post("/api/blogs")
+  .send(blog) 
+  .expect(201) 
+  .expect("Content-Type", /application\/json/)
+
+  assert.strictEqual(response.body.likes, 0);
 });
 
 
