@@ -20,16 +20,4 @@ blogsRouter.post("/", async (request, response) => {
   response.status(201).json(savedBlog);
 });
 
-notesRouter.post("/", async (request, response) => {
-  const body = request.body;
-
-  const note = new Note({
-    content: body.content,
-    important: body.important || false,
-  });
-
-  const savedNote = await note.save();
-  response.status(201).json(savedNote);
-});
-
 module.exports = blogsRouter;

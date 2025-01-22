@@ -19,13 +19,30 @@ beforeEach(async () => {
   await blogObject.save();
 });
 
-test.only("blogs are returned as json", async () => {
+test("blogs are returned as json", async () => {
   await api
     .get("/api/blogs")
     .expect(200)
     .expect("Content-Type", /application\/json/);
 });
 
+test.only("unique identifier is called 'id'", async () => {
+  await api
+    .get("/api/blogs")
+    .expect(200)
+    .expect("Content-Type", /application\/json/)
+    .expect((res) => {
+      console.log(res.body);
+
+      res.body.forEach((blog, index) => {
+        if (!blog.hasOwnProperty("id")) {
+          throw new Error(`Expected object at index ${index} to have property 'id'`);
+        }
+      });
+    });
+});
+
+
 after(async () => {
-  await mongoose.connection.close()
-})
+  await mongoose.connection.close();
+});
