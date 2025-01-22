@@ -64,7 +64,7 @@ test("its possible to create a new blog entry", async () => {
 
 });
 
-test.only("when likes are missing, default to 0", async () => {
+test("when likes is missing, default to 0", async () => {
 
   let blog = {
     title: "PASTRAMI",
@@ -79,6 +79,40 @@ test.only("when likes are missing, default to 0", async () => {
   .expect("Content-Type", /application\/json/)
 
   assert.strictEqual(response.body.likes, 0);
+});
+
+test.only("when title is missing, SEND 400", async () => {
+
+  let blog = {
+    author: "Chaquichieras Chancho",
+    url: "https://patreon.com/",
+    likes: 4
+  }
+
+  let response = await api
+  .post("/api/blogs")
+  .send(blog) 
+  .expect(400) 
+  .expect("Content-Type", /application\/json/)
+
+  assert.strictEqual(response.statusCode, 400);
+});
+
+test.only("when url is missing, SEND 400", async () => {
+
+  let blog = {
+    title: "PASTRAMI",
+    author: "Chaquichieras Chancho",
+    likes: 4
+  }
+
+  let response = await api
+  .post("/api/blogs")
+  .send(blog) 
+  .expect(400) 
+  .expect("Content-Type", /application\/json/)
+  
+  assert.strictEqual(response.statusCode, 400);
 });
 
 
