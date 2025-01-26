@@ -24,36 +24,36 @@ blogsRouter.post("/", async (request, response) => {
     return response.status(400).json({ error: "Title and URL are required" });
   }
 
-  // const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
-  // if (!decodedToken.id) {
-  //   return response.status(401).json({ error: 'token invalid' })
-  // }
-  // const existingUser = await User.findById(decodedToken.id)
-  const existingUser = await User.find({});
-  if (existingUser.length === 0) {
-    return response
-      .status(400)
-      .json({ error: "No users available in the database" });
+  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
   }
+  const existingUser = await User.findById(decodedToken.id)
+  // const existingUser = await User.find({});
+  // if (existingUser.length === 0) {
+  //   return response
+  //     .status(400)
+  //     .json({ error: "No users available in the database" });
+  // }
 
-  let randomIndex = Math.floor(Math.random() * existingUser.length);
+  // let randomIndex = Math.floor(Math.random() * existingUser.length);
 
   const blog = new Blog({
     title: body.title,
     author: body.author,
     url: body.url,
     likes: body.likes || 0,
-    user: existingUser[randomIndex]._id,
+    user: existingUser._id,
   });
 
   const savedBlog = await blog.save();
 
-  if (!existingUser[randomIndex].blogs) {
-    existingUser[randomIndex].blogs = []; // Ensure blogs array exists
+  if (!existingUser.blogs) {
+    existingUser.blogs = []; // Ensure blogs array exists
   }
-  existingUser[randomIndex].blogs = existingUser[randomIndex].blogs.concat(savedBlog._id);
+  existingUser.blogs = existingUser.blogs.concat(savedBlog._id);
 
-  await existingUser[randomIndex].save();
+  await existingUser.save();
 
   response.status(201).json(savedBlog);
 });
