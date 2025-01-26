@@ -124,7 +124,7 @@ describe("deletion of a blog post", () => {
     const contents = blogsAtEnd.map((r) => r.title);
     assert(!contents.includes(blogToDelete.title));
   })
-  test.only("fails with status code 404 if id is not valid", async () => {
+  test("fails with status code 404 if id is not valid", async () => {
     const blogsAtStart = await helper.blogsInDb();
     const blogToDelete = blogsAtStart[0];
 
@@ -140,7 +140,7 @@ describe("deletion of a blog post", () => {
 });
 
 describe("update of a blog post", () => {
-  test.only("succeeds with status code 200 if id is valid", async () => {
+  test("succeeds with status code 200 if id is valid", async () => {
     const blogsAtStart = await helper.blogsInDb();
 
     let blogToUpdate 
@@ -154,7 +154,7 @@ describe("update of a blog post", () => {
 
     assert.strictEqual(response.statusCode, 204);
   })
-  test.only("fails with status code 404 if id is not valid", async () => {
+  test("fails with status code 404 if id is not valid", async () => {
     const blogsAtStart = await helper.blogsInDb();
 
     let blogToUpdate 
