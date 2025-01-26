@@ -1,9 +1,9 @@
-POST http://localhost:3003/api/blogs
+POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-  "title": "new blog",
-  "author": "Frederick Forsyth",
-  "url": "dunno.com",
+  "title": "f yeah",
+  "author": "now this works",
+  "url": "yeahyeah.com",
   "likes": 5
 }
