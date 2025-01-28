@@ -1,6 +1,6 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZyYW5raXRvIiwiaWQiOiI2Nzk2YjNiYjkwOWU2NDAyM2YzOGUyMTQiLCJpYXQiOjE3Mzc5MzU0NzEsImV4cCI6MTczNzkzOTA3MX0.h7nhika8pMR6s8H6IQYxnSwZV3ppm9yXQzstrkxBx9I
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZyYW5raXRvIiwiaWQiOiI2Nzk2YjNiYjkwOWU2NDAyM2YzOGUyMTQiLCJpYXQiOjE3MzgwMTgxNzIsImV4cCI6MTczODAyMTc3Mn0.j5uiZJ_0npBPCNCIkftX8CbQ1RHuB3zMUqwkW8sY1C4
 
 {
   "title": "think this is working",
