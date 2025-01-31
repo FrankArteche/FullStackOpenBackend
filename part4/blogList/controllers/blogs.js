@@ -9,6 +9,15 @@ blogsRouter.get("/", async (request, response) => {
   response.json(blogs);
 });
 
+blogsRouter.get('/:id', async (request, response) => {
+  const blog = await Blog.findById(request.params.id)
+  if (blog) {
+    response.json(blog)
+  } else {
+    response.status(404).end()
+  }
+})
+
 blogsRouter.post("/", async (request, response) => {
   const body = request.body;
 
@@ -21,14 +30,6 @@ blogsRouter.post("/", async (request, response) => {
     return response.status(401).json({ error: 'token invalid' })
   }
   const existingUser = await User.findById(decodedToken.id)
-  // const existingUser = await User.find({});
-  // if (existingUser.length === 0) {
-  //   return response
-  //     .status(400)
-  //     .json({ error: "No users available in the database" });
-  // }
-
-  // let randomIndex = Math.floor(Math.random() * existingUser.length);
 
   const blog = new Blog({
     title: body.title,
@@ -54,17 +55,35 @@ blogsRouter.delete("/:id", async (request, response) => {
   try {
     const id = request.params.id;
 
-    const deletedBlog = await Blog.findByIdAndDelete(id);
+    if (!request.token) {
+      return response.status(401).json({ error: "token invalid" });
+    }
 
-    if (!deletedBlog) {
+    const decodedToken = jwt.verify(request.token, process.env.SECRET);
+    if (!decodedToken.id) {
+      return response.status(401).json({ error: "token invalid" });
+    }
+
+    const blogCreator = await User.findById(decodedToken.id);
+    const blogToDelete = await Blog.findById(id);
+
+    if (!blogToDelete) {
       return response.status(404).json({ error: "Blog not found" });
     }
 
+    if (blogCreator._id.toString() !== blogToDelete.user.toString()) {
+      return response.status(401).json({ error: "Only the user who created the blog can delete it." });
+    }
+
+    await Blog.deleteOne({ id: id });
+
     response.status(204).end();
   } catch (error) {
-    response.status(404).json({ error: "Blog not found" });
+    console.error(error); // Log the actual error for debugging
+    response.status(500).json({ error: "Something went wrong", details: error.message });
   }
 });
+
 
 blogsRouter.put("/:id", async (request, response) => {
   const { title, url, author, likes } = request.body;
