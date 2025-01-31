@@ -9,7 +9,7 @@ const api = supertest(app);
 
 const User = require("../models/user");
 
-test.only("users are not created if no username or password is given", async () => {
+test("users are not created if no username or password is given", async () => {
   let wrongUser = {
     username: "",
     user: "f",
@@ -21,7 +21,7 @@ test.only("users are not created if no username or password is given", async () 
   assert.strictEqual(response.statusCode, 400);
 });
 
-test.only("user count doesnt modify when bad POST is sent", async () => {
+test("user count doesnt modify when bad POST is sent", async () => {
   let wrongUser = {
     username: "",
     user: "f",

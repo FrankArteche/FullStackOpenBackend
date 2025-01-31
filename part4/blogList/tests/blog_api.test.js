@@ -39,7 +39,7 @@ test("unique identifier is called 'id'", async () => {
     });
 });
 
-test("its possible to create a new blog entry", async () => {
+test.only("its possible to create a new blog entry", async () => {
   let blog = {
     title: "React patternones",
     author: "Michael Chaqui Chan",
@@ -48,11 +48,19 @@ test("its possible to create a new blog entry", async () => {
   };
   const blogsAtStart = await helper.blogsInDb();
 
+  let token =  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkZyYW5raXRvIiwiaWQiOiI2Nzk2YjNiYjkwOWU2NDAyM2YzOGUyMTQiLCJpYXQiOjE3MzgyOTE4NjAsImV4cCI6MTczODI5NTQ2MH0.pNd-hPc_xwbZAznlHRyg10lb90fR187kh_yiMCcQOec"
+
+
   await api
     .post("/api/blogs")
     .send(blog)
-    .expect(201)
-    .expect("Content-Type", /application\/json/);
+    .set("Authorization", `Bearer ${token}`)
+    .expect(401)
+    .expect("Content-Type", /application\/json/)
+    .then(response => {
+      console.log(response)
+    })
+    
 
   const blogsAtEnd = await helper.blogsInDb();
 

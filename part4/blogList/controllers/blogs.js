@@ -25,11 +25,11 @@ blogsRouter.post("/", async (request, response) => {
     return response.status(400).json({ error: "Title and URL are required" });
   }
 
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) {
+  const user = request.user
+  if (!user.id) {
     return response.status(401).json({ error: 'token invalid' })
   }
-  const existingUser = await User.findById(decodedToken.id)
+  const existingUser = await User.findById(user.id)
 
   const blog = new Blog({
     title: body.title,
@@ -59,12 +59,13 @@ blogsRouter.delete("/:id", async (request, response) => {
       return response.status(401).json({ error: "token invalid" });
     }
 
-    const decodedToken = jwt.verify(request.token, process.env.SECRET);
-    if (!decodedToken.id) {
+    const user = request.user    
+
+    if (!user.id) {
       return response.status(401).json({ error: "token invalid" });
     }
 
-    const blogCreator = await User.findById(decodedToken.id);
+    const blogCreator = await User.findById(user.id);
     const blogToDelete = await Blog.findById(id);
 
     if (!blogToDelete) {
