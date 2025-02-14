@@ -87,17 +87,33 @@ blogsRouter.delete("/:id", async (request, response) => {
 
 
 blogsRouter.put("/:id", async (request, response) => {
-  const { title, url, author, likes } = request.body;
+  const { user, likes, author, title, url } = request.body;  
 
-  const blog = {
-    likes,
-  };
+  const formattedBlog = {
+    user: user.id,
+    likes: likes,
+    author: author,
+    title: title,
+    url: url
+  }
+
+  const authUser = request.user  
+
+  if (!authUser.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+
+  // const authUser = request.user  
+
+  // if (authUser.name != user.name){
+  //   return response.status(401).json({ error: 'Only the authors of a post can edit them' })
+  // }
 
   try {
-    let updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
+    let updatedBlog = await Blog.findByIdAndUpdate(request.params.id, formattedBlog, {
       new: true,
     });
-    response.status(204).json(updatedBlog);
+    response.status(200).json(updatedBlog)
   } catch (error) {
     response.send(400).end();
   }

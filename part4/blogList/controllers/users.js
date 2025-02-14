@@ -11,6 +11,15 @@ usersRouter.get("/", async (request, response) => {
   response.json(users);
 });
 
+usersRouter.get("/:id", async (request, response) => {
+  const user = await User.findById(request.params.id).populate("blogs", {
+    url: 1,
+    title: 1,
+    author: 1
+  });
+  response.json(user);
+});
+
 usersRouter.post("/", async (request, response) => {
   const { username, name, password } = request.body;
 
@@ -32,6 +41,16 @@ usersRouter.post("/", async (request, response) => {
   const savedUser = await user.save();
 
   response.status(201).json(savedUser);
+});
+
+usersRouter.put("/:id", async (request, response) => {
+  const { username, name } = request.body;
+
+
+
+  let updatedUser = User.findByIdAndUpdate(request.params.id, request.body)
+
+  response.status(201).end()
 });
 
 module.exports = usersRouter;
