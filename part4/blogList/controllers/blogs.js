@@ -61,10 +61,6 @@ blogsRouter.delete("/:id", async (request, response) => {
 
     const user = request.user    
 
-    if (!user.id) {
-      return response.status(401).json({ error: "token invalid" });
-    }
-
     const blogCreator = await User.findById(user.id);
     const blogToDelete = await Blog.findById(id);
 
@@ -76,7 +72,7 @@ blogsRouter.delete("/:id", async (request, response) => {
       return response.status(401).json({ error: "Only the user who created the blog can delete it." });
     }
 
-    await Blog.deleteOne({ id: id });
+    await Blog.deleteOne({ _id: id });
 
     response.status(204).end();
   } catch (error) {
